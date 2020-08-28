@@ -55,13 +55,45 @@ public class CityOp implements CityOperations {
     }
 
     @Override
-    public int deleteCity(String... strings) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public int deleteCity(String... gradovi) {
+        String sql = "delete from gradovi where naziv in (?)";
+        PreparedStatement ps;
+        int numberOfRows = 0;
+        int last = gradovi.length - 1;
+        for (int i = 0; i < gradovi.length; i++) {
+            try {
+                ps = connection.prepareStatement(sql);
+                ps.setString(1, gradovi[i]);
+                numberOfRows += ps.executeUpdate();
+                ps.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(CityOp.class.getName()).log(Level.SEVERE, null, ex);
+                return 0;
+            }
+        }
+
+        return numberOfRows;
     }
 
     @Override
-    public boolean deleteCity(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public boolean deleteCity(int idG) {
+        try {
+            String sql = "delete from gradovi where IdG = ?";
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, idG);
+            int numberOfRows = ps.executeUpdate();
+            ps.close();
+            if (numberOfRows > 0) {
+                return true;
+            } else {
+                return false;
+
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CityOp.class
+                    .getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
 
     @Override
@@ -73,33 +105,39 @@ public class CityOp implements CityOperations {
         try {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
-
-            ResultSetMetaData rsmd = rs.getMetaData();
-            int columnsNumber = rsmd.getColumnCount();
-
             while (rs.next()) {
-                for (int i = 1; i <= columnsNumber; i++) {
-                    System.out.print(rs.getString(i) + " ");
-                }
+
                 returnVal.add(rs.getInt(1));
-                System.out.println();
+
             }
 
             stmt.close();
             rs.close();
-            
+
         } catch (SQLException ex) {
-            Logger.getLogger(CityOp.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CityOp.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         return returnVal;
 
     }
 
     public static void main(String[] args) {
         CityOp c = new CityOp();
-//        int i = c.insertCity("Beograd", "11000");
-        c.getAllCities();
+        int i = c.insertCity("Beograd", "11000");
+//        c.insertCity("Novi Sad", "22000");
+//        c.insertCity("Nis", "33000");
+//
+//        List l = c.getAllCities();
+//        l.forEach(elem -> System.out.println(elem));
+//        int broj = c.deleteCity("Beograd", "Nis");
+//           boolean i = c.deleteCity(17);
+//        l = c.getAllCities();
+//        l.forEach(elem -> System.out.println(elem));
+//
+//        System.out.println("broj obrisanih gradova " + broj);
+//
 //        System.out.println(i);
     }
 
