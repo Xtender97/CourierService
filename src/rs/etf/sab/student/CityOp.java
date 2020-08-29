@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package kurirskasluzba;
+package rs.etf.sab.student;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -101,7 +101,7 @@ public class CityOp implements CityOperations {
 
         String sql = "select IdG from Gradovi";
         Statement stmt;
-        List returnVal = new ArrayList<Integer>();
+        List returnVal = new ArrayList<>();
         try {
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
